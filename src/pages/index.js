@@ -454,7 +454,7 @@ const IndexPage = () => {
                   </Tool>
                 </Tools>
               </Container>
-              <Shape src="/static/images/shape.svg"></Shape>
+              <Shape src="/static/images/shape.svg" alt="Separator Image"></Shape>
             </Content>
             <Content id="projects">
               <Container>
@@ -462,27 +462,27 @@ const IndexPage = () => {
                   <h2>These are some of my recent works</h2>
                 </Head>
                 <Projects>
-                  <Project target="_blank" href="https://play.google.com/store/apps/details?id=viteri.boxing">
+                  <Project target="_blank" href="https://play.google.com/store/apps/details?id=viteri.boxing" rel="noreferrer">
                     <Figure>
-                      <Image src="/static/images/projects/viteri-boxing.svg" width="80" height="80"/>
+                      <Image src="/static/images/projects/viteri-boxing.svg" width="80" height="80" alt="Viteri Boxing Logo"/>
                       <Caption>Viteri Boxing <u>Ionic/Angular</u></Caption>
                     </Figure>
                   </Project>
-                  <Project target="_blank" href="https://wordpress.org/plugins/open-one-on-demand-delivery/">
+                  <Project target="_blank" href="https://wordpress.org/plugins/open-one-on-demand-delivery/" rel="noreferrer">
                     <Figure>
-                      <Image src="/static/images/projects/open-one.svg" width="80" height="80"/>
+                      <Image src="/static/images/projects/open-one.svg" width="80" height="80" alt="Open One Logo"/>
                       <Caption>Open One Delivery <u>Plugin/Wordpress</u></Caption>
                     </Figure>
                   </Project>
-                  <Project target="_blank" href="https://github.com/frontsigner/frontsigner">
+                  <Project target="_blank" href="https://github.com/frontsigner/frontsigner" rel="noreferrer">
                     <Figure>
-                      <Image src="/static/images/projects/frontsigner.svg" width="80" height="80"/>
+                      <Image src="/static/images/projects/frontsigner.svg" width="80" height="80" alt="Frontsigner Logo"/>
                       <Caption>Frontsigner <u>React/Gatsby</u></Caption>
                     </Figure>
                   </Project>
-                  <Project target="_blank" href="https://wuffinsdogbakery.com/">
+                  <Project target="_blank" href="https://wuffinsdogbakery.com/" rel="noreferrer">
                     <Figure>
-                      <Image src="/static/images/projects/wuffins.svg" width="80" height="80"/>
+                      <Image src="/static/images/projects/wuffins.svg" width="80" height="80" alt="Wuffins Logo"/>
                       <Caption>Wuffins Dog Bakery <u>Wordpress</u></Caption>
                     </Figure>
                   </Project>
@@ -492,14 +492,14 @@ const IndexPage = () => {
                   <p>I constantly work hard to improve my skills.</p>
                 </Foot>
               </Container>
-              <Shape src="/static/images/shape-dark.svg"></Shape>
+              <Shape src="/static/images/shape-dark.svg" alt="Separator Image"></Shape>
             </Content>
             <Footer>
               <Container>
                 <p>Coded with <svg viewBox="0 0 38 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 35L16.245 32.4823C6.46 23.5749 0 17.7003 0 10.4905C0 4.6158 4.598 0 10.45 0C13.756 0 16.929 1.54496 19 3.98638C21.071 1.54496 24.244 0 27.55 0C33.402 0 38 4.6158 38 10.4905C38 17.7003 31.54 23.5749 21.755 32.5014L19 35Z" fill="#4ec600"></path></svg> by <a href="mailto:frontsigner@gmail.com" className="user">Zabdiel Maestre</a></p>
                 <Icons>
-                  <Icon target="_blank" href="https://instagram.com/frontsigner/" title="Instagram"><i className="fab fa-instagram"></i></Icon>
-                  <Icon target="_blank" href="https://github.com/frontsigner/" title="Github"><i className="fab fa-github"></i></Icon>
+                  <Icon target="_blank" href="https://instagram.com/frontsigner/" title="Instagram" rel="noreferrer"><i className="fab fa-instagram"></i></Icon>
+                  <Icon target="_blank" href="https://github.com/frontsigner/" title="Github" rel="noreferrer"><i className="fab fa-github"></i></Icon>
                 </Icons>
               </Container>
             </Footer>
