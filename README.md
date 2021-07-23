@@ -11,7 +11,7 @@
 
 - 💬 Ask me about **wordpress, css, html, javascript, react, angular, ionic**
 
-- 📫 How to reach me **frontsigner@gmail.com, zabdielmaestre@gmail.com**
+- 📫 How to reach me **frontsigner@gmail.com**
 
 - 📄 Know about my experiences [https://frontsigner.com/resume](https://frontsigner.com/resume)
 
