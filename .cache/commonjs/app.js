@@ -9,8 +9,6 @@ var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
 
-var _domready = _interopRequireDefault(require("@mikaelkristiansson/domready"));
-
 var _socket = _interopRequireDefault(require("socket.io-client"));
 
 var _socketIo = _interopRequireDefault(require("./socketIo"));
@@ -44,7 +42,11 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 // Enable fast-refresh for virtual sync-requires, gatsby-browser & navigation
 // To ensure that our <Root /> component can hot reload in case anything below doesn't
 // satisfy fast-refresh constraints
-module.hot.accept([`$virtual/async-requires`, `./api-runner-browser`, `./navigation`]);
+module.hot.accept([`$virtual/async-requires`, `./api-runner-browser`, `./navigation`], () => {
+  // asyncRequires should be automatically updated here (due to ESM import and webpack HMR spec),
+  // but loader doesn't know that and needs to be manually nudged
+  loader.updateAsyncRequires(_asyncRequires.default);
+});
 window.___emitter = _emitter.default;
 const loader = new _devLoader.default(_asyncRequires.default, _matchPaths.default);
 (0, _loader.setLoader)(loader);
@@ -119,8 +121,8 @@ function notCalledFunction() {
   let defaultRenderer = _reactDom.default.render;
 
   if (focusEl && focusEl.children.length) {
-    if (_reactDom.default.createRoot) {
-      defaultRenderer = _reactDom.default.createRoot;
+    if (_reactDom.default.hydrateRoot) {
+      defaultRenderer = _reactDom.default.hydrateRoot;
     } else {
       defaultRenderer = _reactDom.default.hydrate;
     }
@@ -160,8 +162,8 @@ function notCalledFunction() {
         indicatorMountElement.setAttribute(`id`, `query-on-demand-indicator-element`);
         document.body.append(indicatorMountElement);
 
-        if (renderer === _reactDom.default.createRoot) {
-          renderer(indicatorMountElement).render( /*#__PURE__*/_react.default.createElement(_loadingIndicator.LoadingIndicatorEventHandler, null));
+        if (renderer === _reactDom.default.hydrateRoot) {
+          _reactDom.default.createRoot(indicatorMountElement).render( /*#__PURE__*/_react.default.createElement(_loadingIndicator.LoadingIndicatorEventHandler, null));
         } else {
           _reactDom.default.render( /*#__PURE__*/_react.default.createElement(_loadingIndicator.LoadingIndicatorEventHandler, null), indicatorMountElement);
         }
@@ -181,18 +183,35 @@ function notCalledFunction() {
       return /*#__PURE__*/_react.default.createElement(_root.default, null);
     }
 
-    (0, _domready.default)(() => {
+    function runRender() {
       if (dismissLoadingIndicator) {
         dismissLoadingIndicator();
       }
 
-      if (renderer === _reactDom.default.createRoot) {
-        renderer(rootElement, {
-          hydrate: true
-        }).render( /*#__PURE__*/_react.default.createElement(App, null));
+      if (renderer === _reactDom.default.hydrateRoot) {
+        renderer(rootElement, /*#__PURE__*/_react.default.createElement(App, null));
       } else {
         renderer( /*#__PURE__*/_react.default.createElement(App, null), rootElement);
       }
-    });
+    } // https://github.com/madrobby/zepto/blob/b5ed8d607f67724788ec9ff492be297f64d47dfc/src/zepto.js#L439-L450
+    // TODO remove IE 10 support
+
+
+    const doc = document;
+
+    if (doc.readyState === `complete` || doc.readyState !== `loading` && !doc.documentElement.doScroll) {
+      setTimeout(function () {
+        runRender();
+      }, 0);
+    } else {
+      const handler = function () {
+        doc.removeEventListener(`DOMContentLoaded`, handler, false);
+        window.removeEventListener(`load`, handler, false);
+        runRender();
+      };
+
+      doc.addEventListener(`DOMContentLoaded`, handler, false);
+      window.addEventListener(`load`, handler, false);
+    }
   });
 });

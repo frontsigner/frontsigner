@@ -14,8 +14,6 @@ var _reachRouter = require("@gatsbyjs/reach-router");
 
 var _gatsbyReactRouterScroll = require("gatsby-react-router-scroll");
 
-var _domready = _interopRequireDefault(require("@mikaelkristiansson/domready"));
-
 var _gatsby = require("gatsby");
 
 var _navigation = require("./navigation");
@@ -35,7 +33,7 @@ var _stripPrefix = _interopRequireDefault(require("./strip-prefix"));
 var _matchPaths = _interopRequireDefault(require("$virtual/match-paths.json"));
 
 // Generated during bootstrap
-const loader = new _loader.ProdLoader(_asyncRequires.default, _matchPaths.default);
+const loader = new _loader.ProdLoader(_asyncRequires.default, _matchPaths.default, window.pageData);
 (0, _loader.setLoader)(loader);
 loader.setApiRunner(_apiRunnerBrowser.apiRunner);
 window.asyncRequires = _asyncRequires.default;
@@ -164,7 +162,11 @@ window.___loader = _loader.publicLoader;
       _react.default.useEffect(() => {
         if (!onClientEntryRanRef.current) {
           onClientEntryRanRef.current = true;
-          performance.mark(`onInitialClientRender`);
+
+          if (performance.mark) {
+            performance.mark(`onInitialClientRender`);
+          }
+
           (0, _apiRunnerBrowser.apiRunner)(`onInitialClientRender`);
         }
       }, []);
@@ -172,17 +174,35 @@ window.___loader = _loader.publicLoader;
       return /*#__PURE__*/_react.default.createElement(GatsbyRoot, null, SiteRoot);
     };
 
-    const renderer = (0, _apiRunnerBrowser.apiRunner)(`replaceHydrateFunction`, undefined, _reactDom.default.createRoot ? _reactDom.default.createRoot : _reactDom.default.hydrate)[0];
-    (0, _domready.default)(() => {
-      const container = typeof window !== `undefined` ? document.getElementById(`___gatsby`) : null;
+    const renderer = (0, _apiRunnerBrowser.apiRunner)(`replaceHydrateFunction`, undefined, _reactDom.default.hydrateRoot ? _reactDom.default.hydrateRoot : _reactDom.default.hydrate)[0];
 
-      if (renderer === _reactDom.default.createRoot) {
-        renderer(container, {
-          hydrate: true
-        }).render( /*#__PURE__*/_react.default.createElement(App, null));
+    function runRender() {
+      const rootElement = typeof window !== `undefined` ? document.getElementById(`___gatsby`) : null;
+
+      if (renderer === _reactDom.default.hydrateRoot) {
+        renderer(rootElement, /*#__PURE__*/_react.default.createElement(App, null));
       } else {
-        renderer( /*#__PURE__*/_react.default.createElement(App, null), container);
+        renderer( /*#__PURE__*/_react.default.createElement(App, null), rootElement);
       }
-    });
+    } // https://github.com/madrobby/zepto/blob/b5ed8d607f67724788ec9ff492be297f64d47dfc/src/zepto.js#L439-L450
+    // TODO remove IE 10 support
+
+
+    const doc = document;
+
+    if (doc.readyState === `complete` || doc.readyState !== `loading` && !doc.documentElement.doScroll) {
+      setTimeout(function () {
+        runRender();
+      }, 0);
+    } else {
+      const handler = function () {
+        doc.removeEventListener(`DOMContentLoaded`, handler, false);
+        window.removeEventListener(`load`, handler, false);
+        runRender();
+      };
+
+      doc.addEventListener(`DOMContentLoaded`, handler, false);
+      window.addEventListener(`load`, handler, false);
+    }
   });
 });
